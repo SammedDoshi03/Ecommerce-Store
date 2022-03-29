@@ -5,7 +5,6 @@
 
 import {Schema, model} from "mongoose"
 import {generate} from "shortid"
-import {IOrder} from "./orders";
 
 export interface IUser {
     _id: string;
@@ -39,7 +38,8 @@ const schema = new Schema({
     },
     balance:{
         type:Number,
-        default:0
+        default:0,
+        min:0
     },
     Order : [{
         type: Schema.Types.ObjectId,
