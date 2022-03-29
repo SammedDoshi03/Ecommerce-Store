@@ -1,0 +1,520 @@
+{
+	"info": {
+		"_postman_id": "ecd27156-d4ef-4cad-be07-bf7b618194ac",
+		"name": "Ecommerce Store",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Authenticate Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "admin2@gmail.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:12345/admin/login",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"admin",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Seller",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Robert D",
+									"type": "default"
+								},
+								{
+									"key": "email",
+									"value": "tony@Seller.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "Tony@123",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:12345/admin/addSeller",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"admin",
+								"addSeller"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "name",
+								"value": "Electronics",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Electronics",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:12345/admin/category/create",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"admin",
+								"category",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Seller",
+			"item": [
+				{
+					"name": "Product",
+					"item": [
+						{
+							"name": "Create Product",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "pName",
+											"value": "Samsung Odyssey G3",
+											"type": "default"
+										},
+										{
+											"key": "pDescription",
+											"value": "144Hz refresh rate with low input lag\nFast moves with a 1ms response time\nSmooth gameplay with AMD FreeSync Premium",
+											"type": "default"
+										},
+										{
+											"key": "aQuantity",
+											"value": "10",
+											"type": "default"
+										},
+										{
+											"key": "sellPrice",
+											"value": "16749",
+											"type": "default"
+										},
+										{
+											"key": "costPrice",
+											"value": "14000",
+											"type": "default"
+										},
+										{
+											"key": "Category",
+											"value": "6242e2eef18fb793a7e3df7b",
+											"type": "default"
+										},
+										{
+											"key": "Seller",
+											"value": "6242e223f18fb793a7e3df72",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:12345/product/create",
+									"host": [
+										"localhost"
+									],
+									"port": "12345",
+									"path": [
+										"product",
+										"create"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Seller Authenticate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "tony@Seller.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "Tony@123",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:12345/seller/auth",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"seller",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Seller's Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:12345/seller/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"seller",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Seller's Inventory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:12345/seller/inventory",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"seller",
+								"inventory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Seller's Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:12345/seller/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"seller",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Sam",
+									"type": "default"
+								},
+								{
+									"key": "email",
+									"value": "Sam@test.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "Sam@test",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:12345/users/create",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"users",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "Sam@test.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "Sam@test",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:12345/users/login",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Place Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "product",
+									"value": "6242eb9e41ef6082b9487171",
+									"type": "default"
+								},
+								{
+									"key": "requiredQuantity",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "date",
+									"value": "",
+									"type": "default",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:12345/order/place",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"order",
+								"place"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:12345/orders/",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"orders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:12345/logout",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Balance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "balance",
+									"value": "20000",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:12345/users/addBalance",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"users",
+								"addBalance"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UnAuth Routes",
+			"item": [
+				{
+					"name": "Product List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "localhost:12345/products/",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Category List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:12345/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
