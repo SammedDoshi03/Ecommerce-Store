@@ -17,6 +17,7 @@ import productController from "../controller/productController";
 import categoryController from "../controller/categoryController";
 import adminController from "../controller/adminController";
 import sellerController from "../controller/sellerController";
+import orderController from "../controller/orderController";
 
 
 export default class Server {
@@ -407,7 +408,7 @@ export default class Server {
                     requiredQuantity: result.value.requiredQuantity,
                     createdAt: result.value.date,
                 }
-                const order = await userController.placeOrder(user._id, result.value.product, orderData);
+                const order = await orderController.placeOrder(user._id, result.value.product, orderData);
                 if (order === null) {
                     res.status(400).send(result.error);
                 } else {
@@ -425,7 +426,7 @@ export default class Server {
             if (user === null) {
                 throw new Error("User need to login to get orders");
             } else {
-               return await userController.getOrders(user._id);
+               return await orderController.getOrders(user._id);
             }
         }));
 
