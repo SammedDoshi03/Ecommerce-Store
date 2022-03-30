@@ -6,6 +6,7 @@ import orders, { IOrder } from "../models/orders";
 import products, {IProduct} from "../models/products";
 import users from "../models/users";
 import mongoose from "mongoose";
+import sellerController from "./sellerController";
 
 export default class orderController{
     /**
@@ -50,6 +51,8 @@ export default class orderController{
                 };
 
                 const finalOrder =  await orders.create(newOrder);
+
+                const sells = await sellerController.updateSellerProfile(finalOrder.requiredQuantity, productDetails.sellPrice, productDetails.costPrice, finalOrder.Seller);
 
                 //return the order
                 if(finalOrder) return finalOrder;
@@ -115,14 +118,15 @@ export default class orderController{
                             "netProfit": 0,
                         },
                         "Product": {
-                            "costPrice" : 0,
+                            "costPrice": 0,
                             "aQuantity": 0,
-                            "Seller":0,
-                            "Category":0
+                            "Seller": 0,
+                            "Category": 0
                         }
                     }
-                }, {
-                $sort: { createdAt: -1 }
+                },
+                {
+                    $sort: { createdAt: -1 }
                 }
             ]).exec();
             if(orderPlaced.length > 0) return orderPlaced;

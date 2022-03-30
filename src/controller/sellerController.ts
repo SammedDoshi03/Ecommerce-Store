@@ -86,11 +86,33 @@ export default class sellerController {
                 }
             },
             {
-                $project: {
-                    "User.balance": 0,
-                    "User.password": 0,
-                    "Seller": 0,
+                $lookup: {
+                    from: "categories",
+                    localField: "Product.Category",
+                    foreignField: "_id",
+                    as: "Category"
                 }
+            },
+            {
+                $project: {
+                    "User": {
+                        "password": 0,
+                        "balance":0
+                    },
+                    "Seller": {
+                        "password": 0,
+                        "totalRevenue": 0,
+                        "noOfOrders": 0,
+                        "netProfit": 0,
+                    },
+                    "Product": {
+                        "Seller": 0,
+                        "Category": 0
+                    }
+                }
+            },
+            {
+                $sort: { createdAt: -1 }
             }
         ]).exec();
     }
@@ -191,6 +213,27 @@ export default class sellerController {
         // if sellerProfile is empty or not
         if (sellerProfile.length > 0) return sellerProfile[0];
         else throw new Error("Seller not found");
+    }
+
+    /**
+     * Updates seller profile's noOfOrders, totalRevenue and netProfit
+     * @param sellerId
+     * @param quantity
+     * @param sellPrice
+     * @param costPrice
+     * @returns sellerProfile
+     */
+    static async updateSellerProfile(quantity, sellPrice, costPrice, sellerId): Promise<void>{
+        //get seller's profile
+
+        const seller = await sellers.findById(sellerId).lean();
+        //Update noOfOrders, totalRevenue and netProfit parameters
+        let order = seller.noOfOrders + 1;
+        let revenue = (+quantity * +sellPrice) + seller.totalRevenue;
+        let profit = ((+sellPrice - +costPrice) * +quantity) + seller.netProfit;
+
+        await sellers.findByIdAndUpdate(sellerId, {noOfOrders:order, totalRevenue:revenue, netProfit:profit })
+
     }
 
 }

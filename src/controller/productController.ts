@@ -29,22 +29,58 @@ export default  class  productController {
     }
 
 
+
     /**
      * Get all products
-     * return all products
+     * @param page
+     * @param limit
+     * @param filterBy
+     * @param sort
+     * @returns all products
      */
-    public static async getAllProducts(data : any): Promise<IProduct[]> {
-        const {page, limit, ...rest} = data;
-
-        if(data.length == 2){
-            const productList = await products.find({}).populate('Category').skip(page * limit).limit(limit);
-            if (products.length > 0 ) return productList;
-            else throw new Error("Products not found");
+    static async findAll(page,limit,filterBy,sort,category):Promise<IProduct[]>{
+        //check category is empty or not
+        if(category !=undefined){
+            var sort1 = { $sort: {} }
+            // sory by filter and asc and dsc order
+            sort1["$sort"][filterBy] = sort
+            const result = await products.aggregate([
+                {
+                    $match: { Category: new mongoose.Types.ObjectId(category) },
+                },
+                {
+                    $skip: page * limit,
+                },
+                {
+                    $limit: limit,
+                },
+                {
+                    $lookup: {
+                        from: "categories",
+                        localField: "Category",
+                        foreignField: "_id",
+                        as: "Category"
+                    },
+                },
+                sort1,
+            ])
+            return result;
         }
+        // if category is not given
         else{
-            const productList = await products.find({Category: new mongoose.Types.ObjectId(rest["Category"])}).populate('Category').skip(page * limit).limit(limit);
-            if (productList.length > 0 ) return productList;
-            else throw new Error("Products not found");
+
+            var sort1 = { $sort: {} }
+            sort1["$sort"][filterBy] = sort
+            const result = await products.aggregate([
+                {
+                    $skip: page * limit,
+                },
+                {
+                    $limit: limit,
+                },
+                sort1,
+            ])
+            return result;
         }
     }
 }

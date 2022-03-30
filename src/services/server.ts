@@ -353,6 +353,24 @@ export default class Server {
         }));
 
         /**
+         * Show User Profile
+         *  {string} "Userid vai Session"
+         *  return "User Profile"
+         */
+        this.app.get("/users/profile", responseToPostman(async (req: Request, res: Response) => {
+            //@ts-ignore
+            if(req.session && req.session.user)
+            {
+                // @ts-ignore
+                return await userController.getUserProfile(req.session.user._id);
+            }
+            else {
+                throw new Error("User need to be logged in");
+            }
+        }));
+
+
+        /**
          * Added Balance to user
          * @return {string} "User logged out"
          */
@@ -477,17 +495,18 @@ export default class Server {
          */
         this.app.get("/products/", responseToPostman(async (req: Request) => {
             // joi validation
-            const schema = Joi.object().keys({
+            const schema = Joi.object   ({
                 page: Joi.number().integer().default(0),
                 limit: Joi.number().integer().default(10),
+                filterBy:Joi.string().default("sellPrice"),
+                // for ascending 1 and for desending -1
+                sort: Joi.number().default(1),
                 category: Joi.string().optional(),
-                sort: Joi.string().optional(),
-                sortBy: Joi.string().optional(),
-                sortOrder: Joi.string().optional(),
             });
-
-            const result = await schema.validate(req.body);
-            return await productController.getAllProducts(result.value);
+            // validating the schema
+            const data = await schema.validateAsync(req.query);
+            // return the product list
+            return await productController.findAll(data.page, data.limit, data.filterBy, data.sort,data.category);
         }));
 
         /**

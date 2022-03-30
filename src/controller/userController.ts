@@ -6,6 +6,7 @@ import users, { IUser } from "../models/users";
 import Bcrypt from "../services/bcrypt";
 import orders, {IOrder} from "../models/orders";
 import products, {IProduct} from "../models/products";
+import mongoose from "mongoose";
 
 export default class userController {
     /**
@@ -57,6 +58,28 @@ export default class userController {
             await users.findByIdAndUpdate(_id, {balance: newBalance});
             return newBalance;
         }
+        else throw new Error("user not exists");
+    }
+
+    /**
+     * Get User Profile
+     * @param _id
+     * @returns user
+     */
+    static async getUserProfile(_id) {
+        const user = await users.aggregate([
+            {
+                $match: {
+                    _id: new mongoose.Types.ObjectId(_id)
+                },
+            },
+            {
+                $project:{
+                    "password": 0,
+                }
+            },
+        ]).exec();
+        if(user) return user;
         else throw new Error("user not exists");
     }
 }
