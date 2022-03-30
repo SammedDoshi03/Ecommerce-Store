@@ -14,7 +14,8 @@ export default  class  productController {
      *
      */
     static async createProduct(product: IProduct): Promise<IProduct> {
-        const productDetails = await products.findOne({ pName: product.pName }).lean();
+
+        const productDetails = await products.findOne({ pName: product.pName, Seller : product.Seller }).lean();
 
         // cheking for the product already exists
         if (productDetails) throw new Error("Product already exists");
@@ -64,6 +65,19 @@ export default  class  productController {
                         as: "Category"
                     },
                 },
+                {
+                    $lookup: {
+                        from: "sellers",
+                        localField: "Seller",
+                        foreignField: "_id",
+                        as: "Seller"
+                    },
+                },
+                {
+                    $project:{"Seller.password":0, "Seller.noOfOrders":0,"costPrice":0,"Seller.totalRevenue":0,
+                        "Seller.netProfit":0}
+                },
+
                 sort1,
             ]).exec();
         }
@@ -80,6 +94,28 @@ export default  class  productController {
                 {
                     $skip: page * limit,
                 },
+                {
+                    $lookup: {
+                        from: "categories",
+                        localField: "Category",
+                        foreignField: "_id",
+                        as: "Category"
+                    },
+                },
+
+                {
+                    $lookup: {
+                        from: "sellers",
+                        localField: "Seller",
+                        foreignField: "_id",
+                        as: "Seller"
+                    },
+                },
+                {
+                    $project:{"Seller.password":0, "Seller.noOfOrders":0,"costPrice":0,"Seller.totalRevenue":0,
+                        "Seller.netProfit":0}
+                },
+
                 {
                     $limit: limit,
                 },

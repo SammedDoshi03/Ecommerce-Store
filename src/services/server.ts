@@ -262,7 +262,7 @@ export default class Server {
                     const inventory= await sellerController.getInventory(data.page, data.limit, req.session.seller._id, +data.stock);
                     if (inventory.length > 0)
                         return inventory;
-                    else return ("Seller doesn't have any products")
+                    else return ("No Products to Show")
                 }
                 else throw new Error("Seller is not authenticated");
             }),
@@ -337,7 +337,7 @@ export default class Server {
                 // @ts-ignore
                 req.session.admin = null;
                 // @ts-ignore
-                req.session.session = null;
+                req.session.seller = null;
                 return"User logged in";
             }
         }));
@@ -450,7 +450,7 @@ export default class Server {
             {
             const schema = Joi.object().keys({
                 pName: Joi.string().required(),
-                pDescription: Joi.string().required(),
+                pDescription: Joi.string().min(10).max(400).required(),
                 aQuantity: Joi.number().required(),
                 sellPrice: Joi.number().required(),
                 costPrice: Joi.number().required(),
