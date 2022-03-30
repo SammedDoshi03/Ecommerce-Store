@@ -92,7 +92,7 @@ export default class Server {
                 if (admin) {
                     // @ts-ignore
                     req.session.admin = admin;
-                    res.send("Admin Authenticated");
+                    return "Admin Authenticated";
                 } else {
                     throw new Error("Invalid email or password");
                 }
@@ -300,10 +300,10 @@ export default class Server {
 
             const result = await schema.validate(req.body);
             const user = await userController.create(result.value);
-            if (user === null) {
-                res.status(400).send(result.error);
+            if (user) {
+               return "User created";
             } else {
-                res.send("User created");
+                throw new Error("User not created");
             }
         }));
 
@@ -322,12 +322,12 @@ export default class Server {
             const user = await userController.auth(result.value.email, result.value.password);
 
             if (user === null) {
-                res.status(400).send(result.error);
+                return result.error;
             } else {
                 //Store user in session
                 // @ts-ignore
                 req.session.user = user;
-                res.send("User logged in");
+                return"User logged in";
             }
         }));
 
@@ -351,7 +351,7 @@ export default class Server {
 
         /**
          * Added Balance to user
-         * @return {string} "User logged out"
+         * @return {string} ""
          */
         this.app.post("/users/addBalance", responseToPostman(async (req: Request, res: Response) => {
             const schema = Joi.object().keys({
@@ -362,10 +362,10 @@ export default class Server {
             const result = await schema.validate(req.body);
                 // @ts-ignore
             const user = await userController.addBalance(req.session.user._id, result.value.balance);
-            if (user === null) {
-                throw new Error("User is not authenticated");
+            if (user) {
+               return "Wallet updated";
             } else {
-                res.send("Wallet updated");
+                 throw new Error("Wallet not updated");
             }}
             else throw new Error("User is not authenticated");
         }));
@@ -379,6 +379,7 @@ export default class Server {
          * @return {string} "Order placed"
          */
         this.app.post("/order/place", responseToPostman(async (req: Request, res: Response) => {
+            // @ts-ignore
             // @ts-ignore
             if(req.session && req.session.user ){
             const schema = Joi.object().keys({
@@ -401,9 +402,9 @@ export default class Server {
 
                 const order = await orderController.placeOrder(orderData.User, result.value.product, orderData);
                 if (order === null) {
-                    res.status(400).send(result.error);
+                    return result.error;
                 } else {
-                    res.send("Order placed");
+                    return "Order placed";
                 }
             } else throw new Error("User need to login to get orders");
         }));
