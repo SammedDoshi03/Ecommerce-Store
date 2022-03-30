@@ -4,6 +4,7 @@
 
 import products, {IProduct} from "../models/products";
 import mongoose from "mongoose";
+import Category from "../models/category";
 
 export default  class  productController {
 
@@ -34,14 +35,15 @@ export default  class  productController {
      */
     public static async getAllProducts(data : any): Promise<IProduct[]> {
         const {page, limit, ...rest} = data;
-        if(rest.length == 0){
+
+        if(data.length == 2){
             const productList = await products.find({}).populate('Category').skip(page * limit).limit(limit);
             if (products.length > 0 ) return productList;
             else throw new Error("Products not found");
         }
         else{
-            const productList = await products.find({category: rest[0]}).skip(page * limit).limit(limit);
-            if (products.length > 0 ) return productList;
+            const productList = await products.find({Category: new mongoose.Types.ObjectId(rest["Category"])}).populate('Category').skip(page * limit).limit(limit);
+            if (productList.length > 0 ) return productList;
             else throw new Error("Products not found");
         }
     }

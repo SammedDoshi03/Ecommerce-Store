@@ -40,11 +40,7 @@ const schema = new Schema({
         type:Number,
         default:0,
         min:0
-    },
-    Order : [{
-        type: Schema.Types.ObjectId,
-        ref: "orders"
-    }]
+    }
 })
 
 export default model<IUser>("users",schema)

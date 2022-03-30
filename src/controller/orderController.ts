@@ -5,6 +5,7 @@
 import orders, { IOrder } from "../models/orders";
 import products, {IProduct} from "../models/products";
 import users from "../models/users";
+import mongoose from "mongoose";
 
 export default class orderController{
     /**
@@ -65,10 +66,50 @@ export default class orderController{
      */
 
     static async getOrders(_id) : Promise<IOrder[]> {
+
         const user = await users.findById(_id).lean();
         if(user) {
-            const orderList = await orders.find({User: _id}).lean();
-            if(orders.length > 0) return orderList;
+            const orderPlaced = await orders.aggregate([
+                {
+                    $match: { User: new mongoose.Types.ObjectId(_id) },
+                },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "User",
+                        foreignField: "_id",
+                        as: "User"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "sellers",
+                        localField: "Seller",
+                        foreignField: "_id",
+                        as: "Seller"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "products",
+                        localField: "Product",
+                        foreignField: "_id",
+                        as: "Product"
+                    }
+                },
+                {
+                    $project: {
+                        "User.password": 0,
+                        "Seller.password": 0,
+                        "Seller.totalRevenue": 0,
+                        "Seller.noOfOrders": 0,
+                        "Seller.netProfit": 0,
+                        "Seller.Order": 0,
+                        "Seller.Product": 0,
+                    }
+                }
+            ]).exec();
+            if(orderPlaced.length > 0) return orderPlaced;
             else throw new Error("No orders found");
         }
         else throw new Error("user not exists");

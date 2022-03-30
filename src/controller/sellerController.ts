@@ -61,15 +61,41 @@ export default class sellerController {
             {
                 $limit: limit,
             },
-            { //populate product field
-                $lookup:{
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "User",
+                    foreignField: "_id",
+                    as: "User"
+                }
+            },
+            {
+                $lookup: {
+                    from: "sellers",
+                    localField: "Seller",
+                    foreignField: "_id",
+                    as: "Seller"
+                }
+            },
+            {
+                $lookup: {
                     from: "products",
-                    localField:"product",
-                    foreignField:"_id",
-                    as: "product"
+                    localField: "Product",
+                    foreignField: "_id",
+                    as: "Product"
+                }
+            },
+            {
+                $project: {
+                    "User.password": 0,
+                    "Seller.password": 0,
+                    "Seller.totalRevenue": 0,
+                    "Seller.noOfOrders": 0,
+                    "Seller.netProfit": 0,
+                    "Seller.Order": 0,
+                    "Seller.Product": 0,
                 }
             }
-
         ]).exec();
     }
 
@@ -96,6 +122,32 @@ export default class sellerController {
             {
                 $limit: limit,
             },
+            {
+                $lookup:{
+                    from : "categories",
+                    localField: "Category",
+                    foreignField: "_id",
+                    as: "Category"
+                }
+            },
+            {
+                $lookup:{
+                    from : "sellers",
+                    localField: "Seller",
+                    foreignField: "_id",
+                    as: "Seller"
+                }
+            },
+            {
+                $project: {
+                    "Seller.password": 0,
+                    "Seller.totalRevenue": 0,
+                    "Seller.noOfOrders": 0,
+                    "Seller.netProfit": 0,
+                    "Seller.Order": 0,
+                    "Seller.Product": 0,
+                }
+            }
         ]).exec();
 
         let filteredSellerProducts = sellerProducts;
