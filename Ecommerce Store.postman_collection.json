@@ -98,7 +98,7 @@
 							"urlencoded": [
 								{
 									"key": "name",
-									"value": "Electronics",
+									"value": "Food",
 									"type": "default"
 								}
 							]
@@ -113,6 +113,24 @@
 								"admin",
 								"category",
 								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin LogOut",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:12345/logout",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"logout"
 							]
 						}
 					},
@@ -280,6 +298,24 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Seller LogOut",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:12345/logout",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -354,6 +390,54 @@
 							"path": [
 								"users",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:12345/users/profile",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"users",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Balance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "balance",
+									"value": "20000",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:12345/users/addBalance",
+							"host": [
+								"localhost"
+							],
+							"port": "12345",
+							"path": [
+								"users",
+								"addBalance"
 							]
 						}
 					},
@@ -435,35 +519,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "Add Balance",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "balance",
-									"value": "20000",
-									"type": "default"
-								}
-							]
-						},
-						"url": {
-							"raw": "localhost:12345/users/addBalance",
-							"host": [
-								"localhost"
-							],
-							"port": "12345",
-							"path": [
-								"users",
-								"addBalance"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
@@ -480,7 +535,23 @@
 						"header": [],
 						"body": {
 							"mode": "urlencoded",
-							"urlencoded": []
+							"urlencoded": [
+								{
+									"key": "page",
+									"value": "0",
+									"type": "default"
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"type": "default"
+								},
+								{
+									"key": "Category",
+									"value": "6242e2eef18fb793a7e3df7b",
+									"type": "default"
+								}
+							]
 						},
 						"url": {
 							"raw": "localhost:12345/products/",
