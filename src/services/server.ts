@@ -92,6 +92,11 @@ export default class Server {
                 if (admin) {
                     // @ts-ignore
                     req.session.admin = admin;
+                    // @ts-ignore
+                    req.session.seller = null;
+                    // @ts-ignore
+                    req.session.user = null;
+
                     return "Admin Authenticated";
                 } else {
                     throw new Error("Invalid email or password");
@@ -194,6 +199,10 @@ export default class Server {
                     // set the seller session
                     // @ts-ignore
                     req.session.seller = seller;
+                    // @ts-ignore
+                    req.session.admin = null;
+                    // @ts-ignore
+                    req.session.user = null;
                     return "Seller authenticated successfully";
                 }
                 else throw new Error("Seller is not authenticated");
@@ -327,6 +336,10 @@ export default class Server {
                 //Store user in session
                 // @ts-ignore
                 req.session.user = user;
+                // @ts-ignore
+                req.session.admin = null;
+                // @ts-ignore
+                req.session.session = null;
                 return"User logged in";
             }
         }));
