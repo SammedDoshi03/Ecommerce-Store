@@ -9,7 +9,6 @@ import responseToPostman from "../middleware/responseToPostman";
 import expressLog from "../middleware/expressLog";
 
 import Joi from "joi";
-import morgan from "morgan";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import userController from "../controller/userController";
@@ -37,7 +36,6 @@ export default class Server {
      * @info middleware
      */
     middleware() {
-        this.app.use(morgan("combined"));
         this.app.use(expressLog);
         this.app.use(bodyParser.urlencoded({ extended: false }));
 
