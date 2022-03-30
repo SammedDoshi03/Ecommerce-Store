@@ -57,8 +57,13 @@ export default class adminController {
         // check if seller exists
         const check = await sellers.findOne({ email: seller.email }).lean();
         if (check) throw new Error("Seller already exists");
-        const selllerUser =  await sellers.create(seller);
-        if (selllerUser) return selllerUser;
+        const hash = await Bcrypt.hashing(seller.password);
+        const data = {
+            ...seller,
+            password: hash,
+        };
+        const sellerVar =  await sellers.create(data);
+        if (sellerVar) return sellerVar;
         else throw new Error("Seller not added");
     }
 

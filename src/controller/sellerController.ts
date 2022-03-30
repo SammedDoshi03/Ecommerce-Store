@@ -9,18 +9,7 @@ import Bcrypt from "../services/bcrypt";
 
 export default class sellerController {
 
-    /**
-     * create new seller
-     * @param body
-     */
-    static async create(body: any): Promise<ISeller> {
-        const hash = await Bcrypt.hashing(body.password);
-        const data = {
-            ...body,
-            password: hash,
-        };
-        return sellers.create(data);
-    }
+
 
     /**
      * authenticate seller

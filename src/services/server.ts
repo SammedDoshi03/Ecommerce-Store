@@ -55,6 +55,7 @@ export default class Server {
                 },
             }),
         );
+        // Uncomment this line to create Admin at beginning only
         // adminController.create();
     }
 
@@ -98,37 +99,6 @@ export default class Server {
             },
         ));
 
-        /**
-         * Admin logout
-         */
-        this.app.get(
-            "/admin/logout",
-            responseToPostman( async (req: Request, res: Response) => {
-                // @ts-ignore
-                req.session.admin = null;
-                res.send("Admin logged out");
-            },
-        ));
-
-        /**
-         * Create Seller
-         * @param {string} name
-         * @param {string} email
-         * @param {string} password
-         */
-        this.app.post(
-            "/admin/seller/create",
-            responseToPostman( async (req: Request, res: Response) => {
-                const schema = Joi.object().keys({
-                    name: Joi.string().required(),
-                    email: Joi.string().email().required(),
-                    password: Joi.string().required(),
-                });
-                const data = await schema.validate(req.body);
-                const seller = await adminController.addSeller(data.value);
-                res.send(seller);
-            },
-        ));
 
         /**
          * Create Category
@@ -137,20 +107,28 @@ export default class Server {
         this.app.post(
             "/admin/category/create",
             responseToPostman( async (req: Request, res: Response) => {
-                const schema = Joi.object().keys({
-                    name: Joi.string().required(),
-                });
-                const data = await schema.validate(req.body);
-                const category = await adminController.addCategory(data.value);
-                res.send(category);
+                //  @ts-ignore
+                if (req.session && req.session.admin) {
+                    const schema = Joi.object().keys({
+                        name: Joi.string().required(),
+                    });
+                    const data = await schema.validate(req.body);
+                    const category = await adminController.addCategory(data.value);
+                    if (category) return "Category Created"
+                    else throw  new Error("Category Not Created")
+                }
+                else throw new Error("You are not authorized to perform this action");
             },
         ));
 
-        // Seller
 
         /**
          * Create Seller
+         * @param {string} name
+         * @param {string} email
+         * @param {string} password
          */
+
         this.app.post(
             "/admin/addSeller",
             responseToPostman(async (req: Request) => {
@@ -169,7 +147,7 @@ export default class Server {
                 await schema.validateAsync(req.body);
 
                 // creating seller
-                const seller =  await sellerController.create(req.body);
+                const seller = await adminController.addSeller(req.body);
 
                 if(seller) return "Seller created";
                 else throw new Error("Seller is not created");
@@ -193,6 +171,7 @@ export default class Server {
             }),
         );
 
+        // Seller
         /**
          * Seller Authorization
          */
@@ -391,15 +370,6 @@ export default class Server {
             else throw new Error("User is not authenticated");
         }));
 
-        /**
-         * Logout a user
-         * @return {string} "User logged out"
-         */
-        this.app.post("/users/logout", responseToPostman(async (req: Request, res: Response) => {
-            // @ts-ignore
-            req.session.destroy();
-            res.send("User logged out");
-        }));
 
         /**
          * Place an Order
@@ -409,30 +379,33 @@ export default class Server {
          * @return {string} "Order placed"
          */
         this.app.post("/order/place", responseToPostman(async (req: Request, res: Response) => {
+            // @ts-ignore
+            if(req.session && req.session.user ){
             const schema = Joi.object().keys({
                 product: Joi.string().required(),
-                requiredQuantity: Joi.number().required(),
+                requiredQuantity: Joi.number().integer().min(1).required(),
                 date: Joi.date().default(new Date()),
             });
             const result = await schema.validate(req.body);
-            // @ts-ignore
-            const user = req.session.user;
-            if (user === null) {
-                res.status(500).send("User need to login to place an order");
-            } else {
+            if(result.error){
+                throw result.error;
+            }
+
                 const orderData = {
-                    User: user._id,
+                    // @ts-ignore
+                    User: req.session.user._id,
                     Product: result.value.product,
                     requiredQuantity: result.value.requiredQuantity,
                     createdAt: result.value.date,
                 }
-                const order = await orderController.placeOrder(user._id, result.value.product, orderData);
+
+                const order = await orderController.placeOrder(orderData.User, result.value.product, orderData);
                 if (order === null) {
                     res.status(400).send(result.error);
                 } else {
                     res.send("Order placed");
                 }
-            }
+            } else throw new Error("User need to login to get orders");
         }));
 
         /**
@@ -506,9 +479,10 @@ export default class Server {
             });
             // validating the schema
             const data = await schema.validateAsync(req.query);
+
             // return the product list
             const product = await productController.findAll(data.page, data.limit, data.filterBy, data.sort,data.category);
-            console.log(product)
+
             if(product.length > 0) return product
             else throw new Error("No Products listed at this moment, try after some time ")
         }));
