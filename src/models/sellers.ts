@@ -14,8 +14,6 @@ export interface ISeller{
     name: string;
     email: string;
     password: string;
-    Order: IOrder[] | string[],
-    Product: IProduct[] | string[],
     noOfOrders: number;
     totalRevenue : number;
     netProfit:number,
@@ -44,14 +42,6 @@ const schema = new Schema({
         type:String,
         required:true
     },
-    Order: [{
-        type: Schema.Types.ObjectId,
-        ref: "orders",
-    }],
-    Product: [{
-        type: Schema.Types.ObjectId,
-        ref: "products",
-    }],
     noOfOrders: {
         type: Number,
         min: 0,

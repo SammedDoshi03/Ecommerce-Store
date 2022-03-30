@@ -14,16 +14,16 @@ export default  class  productController {
      *
      */
     static async createProduct(product: IProduct): Promise<IProduct> {
-        const productDetails = await products.findById(product._id);
+        const productDetails = await products.findOne({ pName: product.pName }).lean();
 
         // cheking for the product already exists
         if (productDetails) throw new Error("Product already exists");
 
         // checking for Selling price and cost price
-        if (product.sellPrice < product.costPrice)
-            throw new Error("Selling Price cannot be less than Cost Price")
-        const newProduct = await products.create(product)
+        // if (product.sellPrice < product.costPrice)
+        //     throw new Error("Selling Price cannot be less than Cost Price")
 
+        const newProduct = await products.create(product)
         if (!newProduct) throw new Error("Product not created");
         return newProduct;
     }

@@ -87,13 +87,9 @@ export default class sellerController {
             },
             {
                 $project: {
+                    "User.balance": 0,
                     "User.password": 0,
-                    "Seller.password": 0,
-                    "Seller.totalRevenue": 0,
-                    "Seller.noOfOrders": 0,
-                    "Seller.netProfit": 0,
-                    "Seller.Order": 0,
-                    "Seller.Product": 0,
+                    "Seller": 0,
                 }
             }
         ]).exec();

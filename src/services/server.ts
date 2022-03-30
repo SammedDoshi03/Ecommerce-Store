@@ -454,9 +454,13 @@ export default class Server {
                 costPrice: Joi.number().required(),
                 createdAt: Joi.date().default(new Date()),
                 Category: Joi.string().required(),
-                Seller: Joi.string().required(),
             });
-            const result = await schema.validate(req.body);
+                const data = {
+                    ...req.body,
+                    //@ts-ignore
+                    Seller: req.session.seller._id,
+                }
+            const result = await schema.validate(data);
                 return await productController.createProduct(result.value);
             }
             else{
