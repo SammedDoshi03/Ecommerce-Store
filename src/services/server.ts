@@ -413,12 +413,11 @@ export default class Server {
          */
         this.app.get("/orders/", responseToPostman(async (req: Request) => {
             // @ts-ignore
-            const user = req.session.user;
-            if (user === null) {
-                throw new Error("User need to login to get orders");
-            } else {
-               return await orderController.getOrders(user._id);
+            if(req.session && req.session.user ) {
+                // @ts-ignore
+                return await orderController.getOrders(req.session.user._id);
             }
+          else throw new Error("User need to login to get orders");
         }));
 
         /**
