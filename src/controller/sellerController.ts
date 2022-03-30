@@ -170,21 +170,20 @@ export default class sellerController {
 
         let filteredSellerProducts = sellerProducts;
 
-        if(stock == 0) //display in-stock products
+        if(stock === 0) //display in-stock products
         {
-            filteredSellerProducts = sellerProducts.filter(product => {
+            filteredSellerProducts = filteredSellerProducts.filter(product => {
                 if (product.aQuantity > 0) {
                     return product;
                 }
             })
         }
-        else //display out-of-stock products
+        if(stock === 1) //display out-of-stock products
         {
-            filteredSellerProducts = sellerProducts.filter(product => {
+            filteredSellerProducts = filteredSellerProducts.filter(product => {
                 if (product.aQuantity == 0) {
                     return product;
                 }
-                return filteredSellerProducts;
             })
         }
         return filteredSellerProducts;

@@ -48,7 +48,7 @@ export default  class  productController {
                 {
                     $match: { Category: new mongoose.Types.ObjectId(category),
                         aQuantity:{$gt:0}
-                    },  
+                    },
                 },
                 {
                     $skip: page * limit,

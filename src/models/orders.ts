@@ -16,6 +16,7 @@ export interface IOrder {
     Seller : ISeller | String;
     Product:  IProduct |  string;
     requiredQuantity: number;
+    totalAmount: number;
     createdAt: Date;
 }
 
@@ -39,6 +40,11 @@ const schema = new Schema({
         required:true
     },
     requiredQuantity:{
+        type:Number,
+        min:1,
+        required:true
+    },
+    totalAmount:{
         type:Number,
         min:1,
         required:true

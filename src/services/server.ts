@@ -479,7 +479,8 @@ export default class Server {
                     Seller: req.session.seller._id,
                 }
             const result = await schema.validate(data);
-                return await productController.createProduct(result.value);
+                const  product = await productController.createProduct(result.value);
+                return "Product Created Successfully";
             }
             else{
                throw new Error("You are not authorized to perform this action");
@@ -506,7 +507,10 @@ export default class Server {
             // validating the schema
             const data = await schema.validateAsync(req.query);
             // return the product list
-            return await productController.findAll(data.page, data.limit, data.filterBy, data.sort,data.category);
+            const product = await productController.findAll(data.page, data.limit, data.filterBy, data.sort,data.category);
+            console.log(product)
+            if(product.length > 0) return product
+            else throw new Error("No Products listed at this moment, try after some time ")
         }));
 
         /**

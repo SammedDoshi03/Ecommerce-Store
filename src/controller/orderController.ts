@@ -47,6 +47,7 @@ export default class orderController{
                     Seller: productDetails.Seller,
                     Product: productDetails._id,
                     requiredQuantity: order.requiredQuantity,
+                    totalAmount: productDetails.sellPrice * order.requiredQuantity,
                     createdAt: new Date()
                 };
 
