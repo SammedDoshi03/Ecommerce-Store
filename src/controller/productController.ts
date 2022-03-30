@@ -44,9 +44,11 @@ export default  class  productController {
             var sort1 = { $sort: {} }
             // sory by filter and asc and dsc order
             sort1["$sort"][filterBy] = sort
-            const result = await products.aggregate([
+            return  await products.aggregate([
                 {
-                    $match: { Category: new mongoose.Types.ObjectId(category) },
+                    $match: { Category: new mongoose.Types.ObjectId(category),
+                        aQuantity:{$gt:0}
+                    },  
                 },
                 {
                     $skip: page * limit,
@@ -63,15 +65,18 @@ export default  class  productController {
                     },
                 },
                 sort1,
-            ])
-            return result;
+            ]).exec();
         }
         // if category is not given
         else{
 
             var sort1 = { $sort: {} }
             sort1["$sort"][filterBy] = sort
-            const result = await products.aggregate([
+            return await products.aggregate([
+                {
+                    $match: {aQuantity:{$gt:0}
+                    },
+                },
                 {
                     $skip: page * limit,
                 },
@@ -79,8 +84,7 @@ export default  class  productController {
                     $limit: limit,
                 },
                 sort1,
-            ])
-            return result;
+            ]).exec()
         }
     }
 }
