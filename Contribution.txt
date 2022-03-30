@@ -1,0 +1,16 @@
+CAPGEMINI INTERNSHIP/ TRAINING
+
+SPRINT 1: Case Study 2: Ecommerce Platform
+
+
+GROUP C: GROUP MEMBER’S CONTRIBUTION
+
+Harshaavardhini: Seller Model, Controller, Routes
+
+Rutuja: Admin and Category: Models, Controller, Routes.
+
+Sammed: Users and Orders: Models, Controller, Routes.   
+
+Priyanshu: Products: Model, Controller, Routes
+
+
