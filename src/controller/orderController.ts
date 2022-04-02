@@ -20,7 +20,7 @@ export default class orderController{
         const productDetails = await products.findById(product).lean();
 
         //check product is exists or not
-        if(productDetails == null) throw new Error("Product not found");
+        if(productDetails === null) throw new Error("Product not found");
 
         // checking for product availability
         if(productDetails.aQuantity < order.requiredQuantity) throw new Error("No of Product not available");

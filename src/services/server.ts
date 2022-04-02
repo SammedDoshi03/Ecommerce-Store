@@ -85,8 +85,8 @@ export default class Server {
                     email: Joi.string().email().required(),
                     password: Joi.string().required(),
                 });
-                const data = await schema.validate(req.body);
-                const admin = await adminController.adminAuth(data.value.email, data.value.password);
+                const data = await schema.validateAsync(req.body);
+                const admin = await adminController.adminAuth(data.email, data.password);
                 if (admin) {
                     // @ts-ignore
                     req.session.admin = admin;
@@ -115,8 +115,8 @@ export default class Server {
                     const schema = Joi.object().keys({
                         name: Joi.string().required(),
                     });
-                    const data = await schema.validate(req.body);
-                    const category = await adminController.addCategory(data.value);
+                    const data = await schema.validateAsync(req.body);
+                    const category = await adminController.addCategory(data);
                     if (category) return "Category Created"
                     else throw  new Error("Category Not Created")
                 }
@@ -302,11 +302,11 @@ export default class Server {
                 name: Joi.string().required(),
                 email: Joi.string().email().required(),
                 password: Joi.string().min(8).required(),
-                balance: Joi.number().required(),
+                balance: Joi.number().default(0),
             });
 
-            const result = await schema.validate(req.body);
-            const user = await userController.create(result.value);
+            const result = await schema.validateAsync(req.body);
+            const user = await userController.create(result);
             if (user) {
                return "User created";
             } else {
@@ -325,8 +325,8 @@ export default class Server {
                 email: Joi.string().email().required(),
                 password: Joi.string().min(8).required(),
             });
-            const result = await schema.validate(req.body);
-            const user = await userController.auth(result.value.email, result.value.password);
+            const result = await schema.validateAsync(req.body);
+            const user = await userController.auth(result.email, result.password);
 
             if (user === null) {
                 return result.error;
@@ -370,9 +370,9 @@ export default class Server {
             });
             // @ts-ignore
             if(req.session && req.session.user){
-            const result = await schema.validate(req.body);
+            const result = await schema.validateAsync(req.body);
                 // @ts-ignore
-            const user = await userController.addBalance(req.session.user._id, result.value.balance);
+            const user = await userController.addBalance(req.session.user._id, result.balance);
             if (user) {
                return "Wallet updated";
             } else {
@@ -398,7 +398,7 @@ export default class Server {
                 requiredQuantity: Joi.number().integer().min(1).required(),
                 date: Joi.date().default(new Date()),
             });
-            const result = await schema.validate(req.body);
+            const result =  await schema.validateAsync(req.body); // changes
             if(result.error){
                 throw result.error;
             }
@@ -406,12 +406,12 @@ export default class Server {
                 const orderData = {
                     // @ts-ignore
                     User: req.session.user._id,
-                    Product: result.value.product,
-                    requiredQuantity: result.value.requiredQuantity,
-                    createdAt: result.value.date,
+                    Product: result.product,
+                    requiredQuantity: result.requiredQuantity,
+                    createdAt: result.date,
                 }
 
-                const order = await orderController.placeOrder(orderData.User, result.value.product, orderData);
+                const order = await orderController.placeOrder(orderData.User, result.product, orderData);
                 if (order === null) {
                     return result.error;
                 } else {
@@ -456,14 +456,15 @@ export default class Server {
                 costPrice: Joi.number().required(),
                 createdAt: Joi.date().default(new Date()),
                 Category: Joi.string().required(),
+                Seller : Joi.string().optional()
             });
                 const data = {
                     ...req.body,
                     //@ts-ignore
                     Seller: req.session.seller._id,
                 }
-            const result = await schema.validate(data);
-                const  product = await productController.createProduct(result.value);
+            const result = await schema.validateAsync(data);
+                const  product = await productController.createProduct(result);
                 return "Product Created Successfully";
             }
             else{
